@@ -1,0 +1,59 @@
+from bs4 import BeautifulSoup as soup
+from urllib.request import Request, urlopen
+import requests
+import pandas as pd
+from pandas import ExcelWriter
+from openpyxl.workbook import Workbook
+headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.3'}
+url1 = "https://www.espn.in/football/team/stats/_/id/364/season/2018"
+url2 = "https://www.espn.in/football/team/stats/_/id/364/league/ENG.1/season/2018/view/discipline"
+
+req1 = requests.get(url1, headers=headers)
+req2 = requests.get(url2, headers=headers)
+
+print(req1.status_code)       #Tells you about the status code of the file i.e whether the file has been downloaded or not
+print(req2.status_code)
+
+
+page_html1 = req1.text
+page_html2 = req2.text
+
+page_soup1 = soup(page_html1, "html.parser")
+page_soup2 = soup(page_html2, "html.parser")
+
+table1 = page_soup1.findAll("div", {"class": "InnerLayout__child flex"})
+
+A = []
+B = []
+C = []
+D = []
+E = []
+F = []
+
+for container in table1:
+    table11 = container.find("table", {"class": "Table2__table__wrapper"})
+    for row1 in table11.findAll("tr"):
+        cells = row1.findAll("td")
+        A.append(cells[2].text)
+        B.append(cells[3].text)
+        C.append(cells[4].text)
+
+df1 = pd.DataFrame(A , columns=['Name'])
+df1['Games Played'] = B
+df1['Goals Scored'] = C
+
+
+table2 = page_soup2.find("table", {"class": "Table2__table-scroller Table2__table"})
+table22 = table2.find("tbody", {"class": "Table2__tbody"})
+for row2 in table22.findAll("tr"):
+    cells = row2.findAll("td")[1:]
+    D.append(cells[0].text)
+    E.append(cells[1].text)
+    F.append(cells[2].text)
+
+df2 = pd.DataFrame(D , columns=['Name'])
+df2['Games Played'] = E
+df2['Yellow Cards'] = F
+
+print(df1 , end = "\n")
+print(df2)
