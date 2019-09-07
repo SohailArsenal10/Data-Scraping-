@@ -1,0 +1,37 @@
+from bs4 import BeautifulSoup as soup
+from urllib.request import urlopen as uReq
+
+myurl = 'https://www.flipkart.com/search?q=iphone&otracker=start&as-show=on&as=off'
+
+uClient = uReq(myurl)
+page_html = uClient.read()
+uClient.close()
+page_soup=soup(page_html,"html.parser")
+
+containers=page_soup.findAll("div",{"class":"bhgxx2 col-12-12"})
+print(len(containers))
+
+'''
+
+
+filename="products.csv"
+f=open(filename,"w")
+
+headers="Product_name,Pricing,Rating\n"
+f.write(headers)
+'''
+for container in containers:
+    product_name=container.findAll("div",{"class":"col col-7-12"})  #Finding given class in each container
+
+
+    price_container = container.findAll("div",{"class":"col col-5-12 _2o7WAb"})
+
+
+    rating_container=container.findAll("div",{"class":"niH0FQ"})
+    print(rating_container[0].text)
+
+'''
+    print("product_name:" + name)
+    print("price:" + price)
+    print("ratings:" + rating)
+'''
