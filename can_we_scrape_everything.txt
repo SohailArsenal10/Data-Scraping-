@@ -1,0 +1,9 @@
+Can we scrape data from any website?
+
+
+No my friend...this is not possible with every website as some of the popular websites have defense intelligence robots(a piece of code) to check who are trying to visit and scrape data
+from the website. To avoid this we have to change User Agents when we scrape the same website for more number of times or we scrape some high security websites.
+
+Now...what is a User Agent? 
+A User Agent is a "string" which is used to tell the server what kind of  a browser,what version and what device the request is coming from. So we can fool the server/robot
+by mentioning another User Agent in our url.
